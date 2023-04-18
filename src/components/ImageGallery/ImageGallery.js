@@ -20,13 +20,24 @@ export default function ImageGallery({
   showModalsUpdate,
   changeLoadingStatus,
 }) {
-  const status = useRef(false);
+  // const [fetchInput, setFetchInput] = useState('');
+  // const [fetchPage, setFetchPage] = useState(1)
+
+  const fetchPage = useRef(1);
+  const fetchInput = useRef('');
+
+  console.log(fetchPage.current, page);
   useEffect(() => {
-    if (input === '' || status.current) {
+    if (page === 1 && fetchInput.current !== input) {
+      fetchPage.current = 1;
+    }
+    if (input === '' || fetchPage.current !== page) {
       return;
     }
     const fetchData = async () => {
       try {
+        fetchPage.current = page + 1;
+        fetchInput.current = input;
         changeLoadingStatus(true);
         const response = await axios(
           `?q=${input}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
@@ -49,19 +60,29 @@ export default function ImageGallery({
         changeLoadingStatus(false);
         if (allPhotosNumber && allPhotosNumber - photosList.length <= 12) {
           toast.info('No more photos in this collection');
+          // status.current = page + 1;
         }
-        status.current = false;
+        // status.current = false;
       } catch (error) {
         toast.error(error.message);
         photosListUpdate([]);
         inputUpdate('');
         changeLoadingStatus(false);
-        status.current = false;
+        // status.current = page + 1;
       }
     };
-    status.current = true;
+    // status.current = true;
     fetchData();
-  }, [input, page]);
+  }, [
+    input,
+    page,
+    allPhotosNumber,
+    getAllPhotosNumber,
+    changeLoadingStatus,
+    inputUpdate,
+    photosListUpdate,
+    photosList,
+  ]);
 
   return (
     <>
