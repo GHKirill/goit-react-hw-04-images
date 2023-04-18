@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
@@ -20,20 +20,32 @@ export default function ImageGallery({
   showModalsUpdate,
   changeLoadingStatus,
 }) {
-  const fetchPage = useRef(1);
-  const fetchInput = useRef('');
+  const [fetchInput, setFetchInput] = useState('');
+  const [fetchPage, setFetchPage] = useState(1);
 
+  // const fetchPage = useRef(1);
+  // const fetchInput = useRef('');
+  //========================
   useEffect(() => {
-    if (page === 1 && fetchInput.current !== input) {
-      fetchPage.current = 1;
+    // if (page === 1 && fetchInput.current !== input) {
+    //   fetchPage.current = 1;
+    // }
+    // if (input === '' || fetchPage.current !== page) {
+    //   return;
+    // }
+    if (page === 1 && fetchInput !== input) {
+      setFetchPage(1);
     }
-    if (input === '' || fetchPage.current !== page) {
+    if (input === '' || fetchPage !== page) {
       return;
     }
     const fetchData = async () => {
       try {
-        fetchPage.current = page + 1;
-        fetchInput.current = input;
+        // fetchPage.current = page + 1;
+        // fetchInput.current = input;
+        setFetchPage(page => page + 1);
+        setFetchInput(input);
+
         changeLoadingStatus(true);
         const response = await axios(
           `?q=${input}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
@@ -74,6 +86,8 @@ export default function ImageGallery({
     inputUpdate,
     photosListUpdate,
     photosList,
+    fetchInput,
+    fetchPage,
   ]);
 
   return (
