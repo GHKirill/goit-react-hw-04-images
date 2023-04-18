@@ -20,13 +20,9 @@ export default function ImageGallery({
   showModalsUpdate,
   changeLoadingStatus,
 }) {
-  // const [fetchInput, setFetchInput] = useState('');
-  // const [fetchPage, setFetchPage] = useState(1)
-
   const fetchPage = useRef(1);
   const fetchInput = useRef('');
 
-  console.log(fetchPage.current, page);
   useEffect(() => {
     if (page === 1 && fetchInput.current !== input) {
       fetchPage.current = 1;
@@ -60,18 +56,14 @@ export default function ImageGallery({
         changeLoadingStatus(false);
         if (allPhotosNumber && allPhotosNumber - photosList.length <= 12) {
           toast.info('No more photos in this collection');
-          // status.current = page + 1;
         }
-        // status.current = false;
       } catch (error) {
         toast.error(error.message);
         photosListUpdate([]);
         inputUpdate('');
         changeLoadingStatus(false);
-        // status.current = page + 1;
       }
     };
-    // status.current = true;
     fetchData();
   }, [
     input,
